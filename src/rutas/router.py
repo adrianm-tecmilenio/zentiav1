@@ -47,14 +47,14 @@ model = OpenAIModel('gpt-4o-zentia', provider=provider)
 rutas_agent = Agent(model, system_prompt=RUTAS_PROMPT, result_type=AgentResponse)
 
 class Body(BaseModel):
-    message: str
+    # message: str
     areas: list[str]
     proposito: str
 
 @router.post('/rutas')
 async def handle_rutas_message(body: Body):
     try:
-        response = await rutas_agent.run(body.message)
+        response = await rutas_agent.run(str(body))
         return response.data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

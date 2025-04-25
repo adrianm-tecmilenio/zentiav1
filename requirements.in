@@ -68,7 +68,8 @@ uvicorn
 wcwidth
 wrapt
 zipp
-pinecone-client
+pinecone
 pdfplumber
 langchain
 langchain-openai
+python-multipart

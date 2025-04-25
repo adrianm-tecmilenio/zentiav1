@@ -1,5 +1,4 @@
-#TODO: Acortar el texto de la respuesta de Omi.
-
+# TODO: Terminar el mensaje con un call to action "Quieres que haga ..."
 
 OMI_PROMPT="""
 Eres un agente que es parte de una aplicación para dar acompañamiento a adultos que se han graduado de universidad para que cumplan su propósito de vida.

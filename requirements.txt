@@ -45,7 +45,7 @@ certifi==2025.1.31
     #   -r requirements.in
     #   httpcore
     #   httpx
-    #   pinecone-client
+    #   pinecone
     #   requests
 cffi==1.17.1
     # via cryptography
@@ -220,10 +220,10 @@ pdfplumber==0.11.6
     # via -r requirements.in
 pillow==11.2.1
     # via pdfplumber
-pinecone-client==6.0.0
+pinecone==6.0.2
     # via -r requirements.in
 pinecone-plugin-interface==0.0.7
-    # via pinecone-client
+    # via pinecone
 prompt-toolkit==3.0.50
     # via
     #   -r requirements.in
@@ -291,11 +291,13 @@ python-dateutil==2.9.0.post0
     #   -r requirements.in
     #   botocore
     #   mistralai
-    #   pinecone-client
+    #   pinecone
 python-dotenv==1.1.0
     # via
     #   -r requirements.in
     #   pydantic-settings
+python-multipart==0.0.20
+    # via -r requirements.in
 pyyaml==6.0.2
     # via
     #   -r requirements.in
@@ -380,7 +382,7 @@ typing-extensions==4.13.1
     #   huggingface-hub
     #   langchain-core
     #   openai
-    #   pinecone-client
+    #   pinecone
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
@@ -396,7 +398,7 @@ urllib3==2.3.0
     # via
     #   -r requirements.in
     #   botocore
-    #   pinecone-client
+    #   pinecone
     #   requests
     #   types-requests
 uvicorn==0.34.0
