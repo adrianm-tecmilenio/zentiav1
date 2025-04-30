@@ -9,13 +9,15 @@ RUTAS_PROMPT = """
 
 - Recibirás una lista de preguntas y respuestas proporcionadas por un usuario en el formato de entrada.
 
+- También recibirás el tipo de ruta que el usuario quiere, que puede ser "Proposito", "Exploradora" o "Intrepida".
+
 - También recibirás unas lista de máximo 3 áreas de interés del usuario, que te ayudarán a generar las rutas de vida.
 
 - También recibirás el propósito de vida del usuario, que te ayudará a generar las rutas de vida.
 
-- Tu tarea principal es generar 3 rutas de vida basadas en las respuestas del usuario, las áreas de interés y el propósito de vida.
+- Tu tarea principal es generar una rutas de vida basada en el tipo de ruta que el usuario quiere, las respuestas del usuario, las áreas de interés y el propósito de vida.
 
-- Debes generar 3 rutas personalizadas basadas en las respuestas específicas del usuario. Analiza cuidadosamente sus respuestas para determinar:
+- Debes generar 1 ruta personalizada basada en las respuestas específicas del usuario. Analiza cuidadosamente sus respuestas para determinar:
   1. Su nivel actual de claridad y compromiso con sus metas
   2. Su disposición para explorar nuevas posibilidades
   3. Su apertura al cambio y desafíos
@@ -173,6 +175,8 @@ Diseñar un espacio personal para meditación o reflexión y describir cómo te 
     ▫️ Descubrir un nuevo pasatiempo
 
 ## Formato de entrada:
+- El tipo de ruta que el usuario quiere te llegará como un string con el campo "tipo_ruta".
+
 - Las preguntas y respuestas te llegarán como un arreglo de objetos de Javascript con el campo "message"
 
 - La respuesta de la pregunta vendrá como un número, 5 representa que el usuario está muy de acuerdo, 1 representa que el usuario está muy en desacuerdo.

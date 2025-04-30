@@ -34,9 +34,8 @@ class RutaIntrepida(BaseModel):
     misiones: list[Mision]
 
 class AgentResponse(BaseModel):
-    ruta_proposito: RutaProposito
-    ruta_exploradora: RutaExploradora
-    ruta_intrepida: RutaIntrepida
+    tipo_ruta: Literal["proposito", "exploradora", "intrepida"]
+    ruta: RutaProposito | RutaExploradora | RutaIntrepida
 
 provider = AzureProvider(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -47,7 +46,8 @@ model = OpenAIModel('gpt-4o-zentia', provider=provider)
 rutas_agent = Agent(model, system_prompt=RUTAS_PROMPT, result_type=AgentResponse)
 
 class Body(BaseModel):
-    # message: str
+    tipo_ruta: Literal["proposito", "exploradora", "intrepida"]
+    message: str
     areas: list[str]
     proposito: str
 
