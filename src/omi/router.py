@@ -1,4 +1,5 @@
 import os
+from typing import Literal
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -37,7 +38,7 @@ embeddings = AzureOpenAIEmbeddings(
 
 class Body(BaseModel):
     message: str
-    proposito: str
+    app: Literal["zentia", "proposito_accion"]
 
 async def get_relevant_context(query: str, top_k: int = 3) -> str:
     """
@@ -58,6 +59,8 @@ async def handle_omi_message(body: Body):
     try:
         # Obtener contexto relevante de Pinecone
         context = await get_relevant_context(body.message)
+
+        print(f"Contexto relevante: {context}")
         
         if context:
             # Si hay contexto relevante, crear un prompt que combine la personalidad con la información

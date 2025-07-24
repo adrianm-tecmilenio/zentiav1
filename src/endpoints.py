@@ -3,7 +3,7 @@ import io
 
 import pdfplumber
 from dotenv import load_dotenv
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from pydantic import BaseModel
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import AzureOpenAIEmbeddings
@@ -29,7 +29,7 @@ class Body(BaseModel):
 class Response(BaseModel):
     response: str
 
-async def load_pdfs_and_store_embeddings(files: list[UploadFile]):
+async def load_pdfs_and_store_embeddings(files: list[UploadFile], app: str, tipo: str):
     """Carga PDFs, extrae texto y almacena embeddings en Pinecone."""
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=2200, chunk_overlap=300)
     index = get_pinecone_index(os.getenv("PINECONE_INDEX"), dimension=1024)
@@ -65,20 +65,40 @@ async def load_pdfs_and_store_embeddings(files: list[UploadFile]):
         # Generar embeddings para cada chunk
         embeddings_list = embeddings.embed_documents(chunks)
 
+        metadata = {}
+
         vectors = []
         for i, (chunk, embedding) in enumerate(zip(chunks, embeddings_list)):
+            if tipo == "general":
+                metadata = {
+                    "text": chunk,
+                    "source": file.filename,
+                    "tipo": tipo
+                }
+            else: 
+                metadata = {
+                    "text": chunk,
+                    "source": file.filename,
+                    "app": app,
+                    "tipo": tipo
+                }
             vector_id = f"{file.filename}_{i}"
-            vectors.append((vector_id, embedding, {"text": chunk}))
+            metadata = metadata
+            vectors.append((vector_id, embedding, metadata))
 
         # Insertar vectores en lotes
         upsert_in_batches(index, vectors, batch_size=100)
         print(f"✅ {len(vectors)} vectores insertados en el índice de Pinecone.")
 
 @router.post("/upload-pdf")
-async def upload_pdfs(files: list[UploadFile] = File(...)):
+async def upload_pdfs(
+    files: list[UploadFile] = File(...),
+    app: str = Form(...),
+    tipo: str = Form(...)
+):
     """Sube PDFs y almacena sus embeddings."""
     try:
-        await load_pdfs_and_store_embeddings(files)
+        await load_pdfs_and_store_embeddings(files, app, tipo)
         return {"message": "Documentos cargados correctamente."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al cargar documentos: {str(e)}")

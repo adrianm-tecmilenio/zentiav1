@@ -14,28 +14,18 @@ load_dotenv()
 
 router = APIRouter()
 
-class Mision(BaseModel):
-    tipo: Literal["habito", "enfoque", "skill"]
-    titulo: str
-    instrucciones: str
-
-#TODO: Cambiar a mision por tipo
-
-class RutaProposito(BaseModel):
-    ruta: str
-    misiones: list[Mision]
-
-class RutaExploradora(BaseModel):
-    ruta: str
-    misiones: list[Mision]
-
-class RutaIntrepida(BaseModel):
-    ruta: str
-    misiones: list[Mision]
+class Fase(BaseModel):
+    misiones: list[str]
+    reflexion: str
+    pregunta_clave: str
 
 class AgentResponse(BaseModel):
-    tipo_ruta: Literal["proposito", "exploradora", "intrepida"]
-    ruta: RutaProposito | RutaExploradora | RutaIntrepida
+    nombre_reto: str
+    objetivo: str
+    fase1: Fase
+    fase2: Fase
+    fase3: Fase
+      
 
 provider = AzureProvider(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -46,9 +36,9 @@ model = OpenAIModel('gpt-4o-zentia', provider=provider)
 rutas_agent = Agent(model, system_prompt=RUTAS_PROMPT, result_type=AgentResponse)
 
 class Body(BaseModel):
-    tipo_ruta: Literal["proposito", "exploradora", "intrepida"]
-    message: str
-    areas: list[str]
+    arquetipo: Literal["explorador", "alma", "corazon"]
+    area: Literal["proposito", "profesional", "intelectual", "finanzas"]
+    meta: str
     proposito: str
 
 @router.post('/rutas')
