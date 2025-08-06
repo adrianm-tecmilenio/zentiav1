@@ -24,7 +24,7 @@ provider = AzureProvider(
     api_version='2024-12-01-preview',
     api_key=os.getenv("OPENAI_API_KEY"),
 )
-model = OpenAIModel('gpt-4o', provider=provider)
+model = OpenAIModel('gpt-4o-zentia', provider=provider)
 generador_agent = Agent(model, system_prompt=GENERADOR_PROMPT, result_type=AgentResponse)
 
 class Body(BaseModel):

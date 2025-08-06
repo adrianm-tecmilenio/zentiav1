@@ -40,12 +40,25 @@ class Body(BaseModel):
     message: str
     app: Literal["zentia", "proposito_accion"]
 
-async def get_relevant_context(query: str, top_k: int = 3) -> str:
+async def get_relevant_context(query: str, app_name: str, top_k: int = 3) -> str:
     """
     Obtiene contexto relevante de Pinecone para la consulta.
     """
     query_embedding = embeddings.embed_query(query)
-    results = query_vectors("zentia-faq", query_embedding, top_k=top_k)
+
+    filter_query = {
+        "$or": [
+            {"app": app_name},
+            {"tipo": "general"}
+        ]
+    }
+
+    results = query_vectors(
+        index_name="zentia-faq",
+        query_vector=query_embedding,
+        top_k=top_k,
+        filter=filter_query
+    )
     
     if not results.matches:
         return ""
@@ -58,7 +71,7 @@ async def get_relevant_context(query: str, top_k: int = 3) -> str:
 async def handle_omi_message(body: Body):
     try:
         # Obtener contexto relevante de Pinecone
-        context = await get_relevant_context(body.message)
+        context = await get_relevant_context(body.message, body.app)
 
         print(f"Contexto relevante: {context}")
         

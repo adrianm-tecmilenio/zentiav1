@@ -31,7 +31,7 @@ def upsert_in_batches(index, vectors: list, batch_size: int = 100):
     except Exception as e:
         raise Exception(f"Error al insertar vectores en Pinecone: {str(e)}")
 
-def query_vectors(index_name: str, query_vector: list, top_k: int = 5, include_metadata: bool = True):
+def query_vectors(index_name: str, query_vector: list, top_k: int = 5, include_metadata: bool = True, filter: dict = None ):
     """
     Consulta vectores similares en un índice de Pinecone.
     
@@ -49,7 +49,8 @@ def query_vectors(index_name: str, query_vector: list, top_k: int = 5, include_m
         return index.query(
             vector=query_vector,
             top_k=top_k,
-            include_metadata=include_metadata
+            include_metadata=include_metadata,
+            filter=filter
         )
     except Exception as e:
         raise Exception(f"Error al consultar vectores en Pinecone: {str(e)}") 
