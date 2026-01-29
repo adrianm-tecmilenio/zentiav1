@@ -46,6 +46,7 @@ provider = AzureProvider(
 )
 model = OpenAIModel('gpt-4o-zentia', provider=provider)
 skilling_agent = Agent(model, system_prompt=SKILLING_PROMPT.format(palabras_clave=palabras_clave), result_type=Response)
+
 selector_agent = Agent(model, system_prompt=SELECTOR_PROMPT, result_type=SelectorResponse)
 
 # Inicializar el buscador de cursos
