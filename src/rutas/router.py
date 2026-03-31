@@ -10,7 +10,7 @@ from src.skilling.router import handle_skilling_with_routes, UserInfo
 
 from typing import List, Optional, Literal
 
-from .prompt import RUTAS_PROMPT, RUTAS_USER_PROMPT, MISION_PROMPT, NEW_RUTAS_PROMPT, OBJECTIVE_SPECS
+from .prompt import RUTAS_PROMPT, RUTAS_USER_PROMPT, MISION_PROMPT, NEW_RUTAS_PROMPT, OBJECTIVE_SPECS, OBJECTIVE_EXAMPLES
 
 load_dotenv()
 
@@ -130,11 +130,14 @@ async def handle_rutas_old_message(body: Body):
 @router.post('/rutas')
 async def handle_rutas_message(body: RutasBody):
     try:
+        print("Corriendo")
         real_estructure = await estructure_agent.run(body.questions)
 
         user_info = real_estructure.data
 
         objective_specifications = OBJECTIVE_SPECS.get(user_info.objetivo_profesional.lower(), "")
+
+        # objective_example = OBJECTIVE_EXAMPLES.get(user_info.objetivo_profesional.lower(), "")
         
         user_prompt = f"""
         Preguntas y respuestas del usuario:
@@ -155,7 +158,31 @@ async def handle_rutas_message(body: RutasBody):
         Competencias desarrolladas al finalizar el plan: {objective_specifications.get('skills_knowledge_outcomes', '')}
         """
 
+        # user_prompt_con_ejemplo = f"""
+        # Preguntas y respuestas del usuario:
+        # - Género: {user_info.genero}
+        # - Edad: {user_info.edad}
+        # - Situación laboral: {user_info.situacion_laboral}
+        # - Industria: {user_info.industria}
+        # - Tipo de rol: {user_info.tipo_rol}
+        # - Objetivo profesional: {user_info.objetivo_profesional}
+        # - ¿Has pensado en tu propósito de vida?: {user_info.has_pensado_proposito}
+        # - Propósito de vida: {user_info.proposito_vida}
+
+        # Especificaciones del objetivo profesional:
+        # Perfil de entrada (antes del plan): {objective_specifications.get('entry_profile', '')}
+
+        # Perfil de salida (después del plan): {objective_specifications.get('exit_profile', '')}
+
+        # Competencias desarrolladas al finalizar el plan: {objective_specifications.get('skills_knowledge_outcomes', '')}
+
+        # Este es un ejemplo de plan en el cual te puedes basar:
+        # {objective_example}
+        # """
+
         complete_plan = await new_rutas_agent.run(user_prompt)
+
+        # complete_plan_con_ejemplo = await new_rutas_agent.run(user_prompt_con_ejemplo)
 
         return complete_plan.data
     except Exception as e:
