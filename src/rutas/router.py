@@ -10,7 +10,7 @@ from src.skilling.router import handle_skilling_with_routes, UserInfo
 
 from typing import List, Optional, Literal
 
-from .prompt import RUTAS_PROMPT, RUTAS_USER_PROMPT, MISION_PROMPT, NEW_RUTAS_PROMPT, OBJECTIVE_SPECS, OBJECTIVE_EXAMPLES
+from .prompt import RUTAS_PROMPT, RUTAS_USER_PROMPT, MISION_PROMPT, NEW_RUTAS_PROMPT, OBJECTIVE_SPECS
 
 load_dotenv()
 
@@ -135,7 +135,18 @@ async def handle_rutas_message(body: RutasBody):
 
         user_info = real_estructure.data
 
-        objective_specifications = OBJECTIVE_SPECS.get(user_info.objetivo_profesional.lower(), "")
+        objective_specifications = OBJECTIVE_SPECS.get(user_info.objetivo_profesional.lower(), None)
+
+        objective_specifications_str = ""
+        if objective_specifications:
+            objective_specifications_str = f"""
+            Especificaciones del objetivo profesional:
+            Perfil de entrada (antes del plan): {objective_specifications.get('entry_profile', '')}
+
+            Perfil de salida (después del plan): {objective_specifications.get('exit_profile', '')}
+
+            Competencias desarrolladas al finalizar el plan: {objective_specifications.get('skills_knowledge_outcomes', '')}
+            """
 
         # objective_example = OBJECTIVE_EXAMPLES.get(user_info.objetivo_profesional.lower(), "")
         
@@ -150,12 +161,7 @@ async def handle_rutas_message(body: RutasBody):
         - ¿Has pensado en tu propósito de vida?: {user_info.has_pensado_proposito}
         - Propósito de vida: {user_info.proposito_vida}
 
-        Especificaciones del objetivo profesional:
-        Perfil de entrada (antes del plan): {objective_specifications.get('entry_profile', '')}
-
-        Perfil de salida (después del plan): {objective_specifications.get('exit_profile', '')}
-
-        Competencias desarrolladas al finalizar el plan: {objective_specifications.get('skills_knowledge_outcomes', '')}
+        {objective_specifications_str}
         """
 
         # user_prompt_con_ejemplo = f"""
