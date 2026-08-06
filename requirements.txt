@@ -243,7 +243,7 @@ pyasn1-modules==0.4.2
     #   google-auth
 pycparser==2.22
     # via cffi
-pydantic==2.11.2
+pydantic
     # via
     #   -r requirements.in
     #   anthropic
